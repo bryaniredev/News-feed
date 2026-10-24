@@ -1,0 +1,11 @@
+{
+  "name": "Newsstand",
+  "short_name": "Newsstand",
+  "description": "Your news, reviews, trends and sport in one scrolling feed.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
