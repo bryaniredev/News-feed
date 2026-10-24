@@ -59,3 +59,8 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Explain a failed deploy
+        if: failure()
+        run: |
+          echo "::error::GitHub Pages refused the deployment. In the repo go to Settings → Pages → Build and deployment → Source and choose 'GitHub Actions' (not 'Deploy from a branch'), then re-run this workflow."
