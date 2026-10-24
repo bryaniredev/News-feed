@@ -31,11 +31,12 @@ jobs:
 
       - run: npm ci
 
+      # Fails until Pages is switched on (Settings → Pages → Source: GitHub Actions);
+      # the feed still builds so its log shows how each source did.
       - name: Configure Pages
         id: pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
+        continue-on-error: true
 
       - name: Run tests
         run: npm test
