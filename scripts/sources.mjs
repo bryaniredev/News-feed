@@ -58,15 +58,12 @@ export const REVIEW_SOURCES = [
 
 export const SPORT_SOURCES = [
   {
-    id: 'tnt-football',
-    name: 'TNT Sports Football',
+    id: 'bbc-football',
+    name: 'BBC Sport Football',
     section: 'sports',
-    color: '#00d2be',
-    page: 'https://www.tntsports.co.uk/football/',
-    feeds: ['https://www.tntsports.co.uk/football/rss.xml', 'https://www.tntsports.co.uk/rss.xml'],
-    linkPattern: /_sto\d+\/story\.shtml$/,
-    // TNT blocks requests from cloud servers, so fall back to Google News for headlines.
-    fallbackFeeds: ['https://news.google.com/rss/search?q=football+site:tntsports.co.uk&hl=en-GB&gl=GB&ceid=GB:en'],
+    color: '#1d7a46',
+    page: 'https://www.bbc.com/sport/football',
+    feeds: ['https://feeds.bbci.co.uk/sport/football/rss.xml'],
     limit: 25,
   },
   {

@@ -216,7 +216,7 @@ function sectionHeader(tab) {
   if (tab.id === 'sports') {
     const shield = settings.sport === 'shield';
     return `<h2 class="section-title">Sport</h2><p class="section-sub">${
-      shield ? 'Spoiler shield is on — tap a story once to reveal it.' : 'TNT Sports football, BBC F1 and RTÉ Sport.'
+      shield ? 'Spoiler shield is on — tap a story once to reveal it.' : 'BBC Sport football and F1, and RTÉ Sport.'
     } <button class="text-btn" data-action="toggle-shield">${shield ? 'Turn shield off' : 'Turn on spoiler shield'}</button></p>`;
   }
   return '';

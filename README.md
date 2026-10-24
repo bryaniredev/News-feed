@@ -5,7 +5,7 @@ A Google Newsstand-style scrolling news reader, hosted on GitHub Pages.
 - **For you**: UNILAD, RTÉ News, WIRED and r/todayilearned in one feed, with a chip for each source.
 - **PS5 Reviews**: IGN's PS5 game reviews from the last 7 days, with review scores.
 - **Trending**: Google Trends' top searches in Ireland and the UK over the past 24 hours, with related stories.
-- **Sport**: TNT Sports football, BBC Sport F1 and RTÉ Sport. To avoid spoilers you can:
+- **Sport**: BBC Sport football, BBC Sport F1 and RTÉ Sport. To avoid spoilers you can:
   - *Spoiler shield* (the default): headlines and photos are blurred until you tap a story.
   - *Hide*: removes the Sport tab completely.
   - *Show*: no blurring.
@@ -17,6 +17,7 @@ A Google Newsstand-style scrolling news reader, hosted on GitHub Pages.
     [transformers.js](https://github.com/huggingface/transformers.js) on WebGPU, or on the CPU if WebGPU isn't available.
     The article text is never sent to a server. You can delete the downloaded model in Settings.
 - Dark mode, the ability to hide individual sources, and an installable PWA ("Add to Home Screen").
+- Hidden from search engines: every page carries a `noindex, nofollow` robots tag.
 
 ## How it works
 
@@ -54,7 +55,7 @@ npm test
 
 - Reddit sometimes blocks requests from cloud servers. When that happens the fetcher tries the JSON API,
   old.reddit.com and then the RSS feed, before falling back to the previous run's posts.
-- UNILAD and TNT Sports don't publish documented RSS feeds, so their section pages are scraped if the
-  feeds fail. A redesign of either site may need a tweak to `scripts/sources.mjs`.
+- UNILAD doesn't publish a documented RSS feed, so its homepage is scraped for links. A redesign of the
+  site may need a tweak to `scripts/sources.mjs`.
 - Copyright in the articles belongs to the publishers. This is meant for personal use. Every story links to
   the original.
