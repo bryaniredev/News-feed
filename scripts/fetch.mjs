@@ -51,7 +51,18 @@ async function itemsFromPage(src, limit) {
 
 async function listGeneric(src) {
   let items = await itemsFromFeeds(src.feeds, src.limit);
-  if (!items.length && src.page) items = await itemsFromPage(src, src.limit);
+  if (!items.length && src.page) {
+    try {
+      items = await itemsFromPage(src, src.limit);
+    } catch (err) {
+      if (!src.fallbackFeeds) throw err;
+      log(`  page failed: ${src.page}: ${err.message}`);
+    }
+  }
+  if (!items.length && src.fallbackFeeds) {
+    // Google News titles end in " - Publisher".
+    items = (await itemsFromFeeds(src.fallbackFeeds, src.limit)).map((i) => ({ ...i, title: i.title.replace(/\s+-\s+[^-]+$/, ''), summary: '' }));
+  }
   return items;
 }
 
@@ -95,7 +106,7 @@ async function listReddit(src) {
 /* -------------------------------------------------- enrich with reader */
 
 function isExtractable(url) {
-  return /^https?:/.test(url || '') && !/\.(jpe?g|png|gif|gifv|webp|mp4|pdf)(\?|$)/i.test(url) && !/(reddit\.com|redd\.it|youtube\.com|youtu\.be|imgur\.com|twitter\.com|x\.com)/i.test(url);
+  return /^https?:/.test(url || '') && !/\.(jpe?g|png|gif|gifv|webp|mp4|pdf)(\?|$)/i.test(url) && !/(news\.google\.com|reddit\.com|redd\.it|youtube\.com|youtu\.be|imgur\.com|twitter\.com|x\.com)/i.test(url);
 }
 
 async function enrich(src, rawItems) {
