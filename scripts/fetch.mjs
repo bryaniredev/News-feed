@@ -66,16 +66,55 @@ async function listGeneric(src) {
   return items;
 }
 
-async function listReddit(src) {
-  const ua = 'web:news-feed-scroller:1.0 (personal news reader)';
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const REDDIT_UA = 'web:news-feed-scroller:1.0 (personal news reader)';
+
+// Reddit rate-limits hard, so subreddits are fetched one at a time.
+let redditQueue = Promise.resolve();
+function listReddit(src) {
+  const run = redditQueue.then(() => listRedditNow(src));
+  redditQueue = run.catch(() => {}).then(() => sleep(3000));
+  return run;
+}
+
+async function redditRss(src) {
+  const urls = [`https://www.reddit.com/r/${src.subreddit}/.rss`, `https://old.reddit.com/r/${src.subreddit}/.rss`];
+  for (const u of urls) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const { text } = await fetchText(u, { ua: REDDIT_UA, accept: 'application/atom+xml, application/xml;q=0.9' });
+        const items = parseFeed(text).filter((i) => i.url && i.title);
+        log(`  reddit rss ok: ${u} (${items.length})`);
+        return items;
+      } catch (err) {
+        log(`  reddit rss failed: ${u}: ${err.message}`);
+        if (!/HTTP 429/.test(err.message) || attempt === 2) break;
+        await sleep(15000 * (attempt + 1));
+      }
+    }
+  }
+  return [];
+}
+
+async function listRedditNow(src) {
+  const rssItems = await redditRss(src);
+  if (rssItems.length) {
+    return rssItems
+      .filter((i) => !/^\s*\[?(meta|mod post)/i.test(i.title))
+      .slice(0, src.limit)
+      .map((i) => {
+        const linkMatch = /<a href="([^"]+)">\[link\]<\/a>/.exec(i.contentHtml || '');
+        return { ...i, summary: '', link: linkMatch ? linkMatch[1].replace(/&amp;/g, '&') : '' };
+      });
+  }
+  // The JSON API has scores and comment counts but usually refuses cloud servers.
   const jsonUrls = [
     `https://www.reddit.com/r/${src.subreddit}/hot.json?limit=${src.limit + 5}&raw_json=1`,
     `https://old.reddit.com/r/${src.subreddit}/hot.json?limit=${src.limit + 5}&raw_json=1`,
-    `https://api.reddit.com/r/${src.subreddit}/hot?limit=${src.limit + 5}&raw_json=1`,
   ];
   for (const u of jsonUrls) {
     try {
-      const { text } = await fetchText(u, { ua, accept: 'application/json' });
+      const { text } = await fetchText(u, { ua: REDDIT_UA, accept: 'application/json' });
       const posts = JSON.parse(text).data.children.map((c) => c.data).filter((p) => !p.stickied);
       log(`  reddit json ok: ${u} (${posts.length})`);
       return posts.slice(0, src.limit).map((p) => ({
@@ -93,14 +132,7 @@ async function listReddit(src) {
       log(`  reddit json failed: ${u}: ${err.message}`);
     }
   }
-  const rssItems = await itemsFromFeeds([`https://www.reddit.com/r/${src.subreddit}/.rss`, `https://old.reddit.com/r/${src.subreddit}/.rss`], src.limit + 2);
-  return rssItems
-    .filter((i) => !/^\s*\[?(meta|mod post)/i.test(i.title))
-    .slice(0, src.limit)
-    .map((i) => {
-      const linkMatch = /<a href="([^"]+)">\[link\]<\/a>/.exec(i.contentHtml || '');
-      return { ...i, summary: '', link: linkMatch ? linkMatch[1].replace(/&amp;/g, '&') : '' };
-    });
+  return [];
 }
 
 /* -------------------------------------------------- enrich with reader */

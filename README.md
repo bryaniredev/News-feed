@@ -53,8 +53,9 @@ npm test
 
 ## Notes
 
-- Reddit sometimes blocks requests from cloud servers. When that happens the fetcher tries the JSON API,
-  old.reddit.com and then the RSS feed, before falling back to the previous run's posts.
+- Reddit rate-limits and often blocks cloud servers, so subreddits are fetched one at a time from their RSS
+  feeds, retrying after a pause if Reddit asks to slow down. If that still fails it tries the JSON API,
+  then falls back to the previous run's posts.
 - UNILAD doesn't publish a documented RSS feed, so its homepage is scraped for links. A redesign of the
   site may need a tweak to `scripts/sources.mjs`.
 - Copyright in the articles belongs to the publishers. This is meant for personal use. Every story links to
