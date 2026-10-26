@@ -125,6 +125,7 @@ async function enrich(src, rawItems) {
     if (raw.score != null) item.score = raw.score;
     if (raw.comments != null) item.comments = raw.comments;
     if (raw.link) item.link = raw.link;
+    if (src.kind === 'reddit') item.reddit = true;
 
     const target = src.kind === 'reddit' ? raw.link : raw.url;
     let article = null;

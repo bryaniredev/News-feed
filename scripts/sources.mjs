@@ -39,6 +39,16 @@ export const NEWS_SOURCES = [
     page: 'https://www.reddit.com/r/todayilearned/',
     limit: 30,
   },
+  {
+    id: 'futurology',
+    name: 'r/Futurology',
+    section: 'news',
+    color: '#0079d3',
+    kind: 'reddit',
+    subreddit: 'Futurology',
+    page: 'https://www.reddit.com/r/Futurology/',
+    limit: 30,
+  },
 ];
 
 export const REVIEW_SOURCES = [

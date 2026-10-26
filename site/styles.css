@@ -235,7 +235,7 @@ main { max-width: 960px; margin: 0 auto; padding: 4px 16px 64px; }
 .card.hero .card-body { padding: 0 16px 16px; }
 .card.hero .card-title { font-size: 21px; line-height: 1.25; font-family: var(--serif); font-weight: 700; }
 .card.no-img { grid-template-columns: 1fr; }
-.card.til .card-title { font-family: var(--serif); font-weight: 600; font-size: 17px; }
+.card.reddit .card-title { font-family: var(--serif); font-weight: 600; font-size: 17px; }
 
 .score {
   display: inline-grid;
@@ -408,7 +408,8 @@ main { max-width: 960px; margin: 0 auto; padding: 4px 16px 64px; }
 .reader-article .r-body td, .reader-article .r-body th { border: 1px solid var(--line); padding: 6px 8px; }
 .reader-article .r-note { font-family: var(--sans); font-size: 14px; color: var(--muted); background: var(--surface); border-radius: 12px; padding: 14px 16px; margin: 18px 0; }
 .reader-article .r-note .btn { margin-top: 10px; display: inline-block; text-decoration: none; }
-.reader-article .r-til { font-size: 1.3em; line-height: 1.4; font-weight: 600; margin: 14px 0; }
+.reader-article .btn { font-family: var(--sans); font-size: 14px; text-decoration: none; }
+.reader-article .r-post { font-size: 1.3em; line-height: 1.4; font-weight: 600; margin: 14px 0; }
 .reader-article .r-divider { font-family: var(--sans); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--faint); border-top: 1px solid var(--line); padding-top: 18px; margin-top: 26px; }
 
 .tldr {

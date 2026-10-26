@@ -172,11 +172,11 @@ function cardHtml(item, index) {
   const src = sourceById(item.source);
   const hero = index % 9 === 0 && item.image;
   const shielded = item.section === 'sports' && settings.sport === 'shield' && !state.revealed.has(item.id);
-  const til = item.source === 'til';
-  const classes = ['card', hero && 'hero', !item.image && 'no-img', shielded && 'shielded', til && 'til'].filter(Boolean).join(' ');
+  const reddit = item.reddit || item.source === 'til';
+  const classes = ['card', hero && 'hero', !item.image && 'no-img', shielded && 'shielded', reddit && 'reddit'].filter(Boolean).join(' ');
   const meta = [];
   if (item.published) meta.push(timeAgo(item.published));
-  if (til) {
+  if (reddit) {
     if (item.score != null) meta.push(`▲ ${compact(item.score)}`);
     if (item.comments != null) meta.push(`${compact(item.comments)} comments`);
     if (item.link && host(item.link)) meta.push(host(item.link));
@@ -188,7 +188,7 @@ function cardHtml(item, index) {
     item.section === 'reviews' && item.score != null
       ? `<span class="score ${scoreClass(item.score, item.scoreMax)}" title="IGN score">${esc(item.score)}</span>`
       : '';
-  const title = til ? item.title.replace(/^TIL:?\s*(that\s+)?/i, (m, that) => (that ? 'TIL that ' : 'TIL ')) : item.title;
+  const title = item.source === 'til' ? item.title.replace(/^TIL:?\s*(that\s+)?/i, (m, that) => (that ? 'TIL that ' : 'TIL ')) : item.title;
   return `<article class="${classes}" tabindex="0" data-id="${item.id}">
     <div class="card-body">
       <div class="card-src">${badge(src)}<span>${esc(src.name)}</span>${hero ? '' : score}</div>
@@ -340,7 +340,7 @@ async function openReader(id) {
   }
   currentItem = item;
   const src = sourceById(item.source);
-  const til = item.source === 'til';
+  const reddit = item.reddit || item.source === 'til';
   $('#reader-source').textContent = src.name;
   $('#reader-open').href = item.url;
   $('#tldr-btn').disabled = false;
@@ -349,12 +349,12 @@ async function openReader(id) {
   $('#reader-scroll').scrollTop = 0;
 
   const meta = [item.author, fmtDate(item.published), item.readingMinutes && `${item.readingMinutes} min read`].filter(Boolean);
-  if (til && item.score != null) meta.push(`▲ ${compact(item.score)} · ${compact(item.comments || 0)} comments`);
+  if (reddit && item.score != null) meta.push(`▲ ${compact(item.score)} · ${compact(item.comments || 0)} comments`);
   const score = item.section === 'reviews' && item.score != null ? `<span class="score ${scoreClass(item.score, item.scoreMax)}">${esc(item.score)}</span>` : '';
 
-  const head = til
+  const head = reddit
     ? `<div class="r-src">${badge(src)} ${esc(src.name)}</div>
-       <p class="r-til">${esc(item.title)}</p>
+       <p class="r-post">${esc(item.title)}</p>
        <div class="r-meta">${meta.map((m) => `<span>${esc(m)}</span>`).join('')}</div>
        <div class="btn-row" style="justify-content:flex-start">
          <a class="btn secondary" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">Reddit thread</a>
@@ -378,13 +378,13 @@ async function openReader(id) {
   const body = $('#r-body');
   if (article?.contentHtml) {
     item._text = article.textContent;
-    body.innerHTML = `${til ? `<div class="r-divider">From ${esc(item.sourceSite || host(item.link))}${item.sourceTitle ? ` — ${esc(item.sourceTitle)}` : ''}</div>` : ''}${cleanHtml(article.contentHtml)}`;
+    body.innerHTML = `${reddit ? `<div class="r-divider">From ${esc(item.sourceSite || host(item.link))}${item.sourceTitle ? ` — ${esc(item.sourceTitle)}` : ''}</div>` : ''}${cleanHtml(article.contentHtml)}`;
   } else {
     item._text = [item.title, item.summary].filter(Boolean).join('. ');
-    body.innerHTML = til
+    body.innerHTML = reddit
       ? ''
       : `${item.summary ? `<p>${esc(item.summary)}</p>` : ''}<div class="r-note">A reader version of this story isn't available.<br /><a class="btn" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">Open on ${esc(host(item.url))}</a></div>`;
-    if (til) $('#tldr-btn').disabled = !item.summary;
+    if (reddit) $('#tldr-btn').disabled = !item.summary;
   }
 }
 

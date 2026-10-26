@@ -2,7 +2,7 @@
 
 A Google Newsstand-style scrolling news reader, hosted on GitHub Pages.
 
-- **For you**: UNILAD, RTÉ News, WIRED and r/todayilearned in one feed, with a chip for each source.
+- **For you**: UNILAD, RTÉ News, WIRED, r/todayilearned and r/Futurology in one feed, with a chip for each source.
 - **PS5 Reviews**: IGN's PS5 game reviews from the last 7 days, with review scores.
 - **Trending**: Google Trends' top searches in Ireland and the UK over the past 24 hours, with related stories.
 - **Sport**: BBC Sport football, BBC Sport F1 and RTÉ Sport. To avoid spoilers you can:
